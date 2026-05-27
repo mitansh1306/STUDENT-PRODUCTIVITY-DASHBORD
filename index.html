@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>StudyFlow — Student Productivity Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">◈</span>
+      <span class="brand-name">StudyFlow</span>
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-btn active" data-panel="dashboard" title="Dashboard">
+        <span class="nav-icon">⬡</span><span class="nav-label">Dashboard</span>
+      </button>
+      <button class="nav-btn" data-panel="todo" title="To-Do">
+        <span class="nav-icon">◻</span><span class="nav-label">To-Do</span>
+      </button>
+      <button class="nav-btn" data-panel="notes" title="Notes">
+        <span class="nav-icon">◈</span><span class="nav-label">Notes</span>
+      </button>
+      <button class="nav-btn" data-panel="pomodoro" title="Pomodoro">
+        <span class="nav-icon">◉</span><span class="nav-label">Pomodoro</span>
+      </button>
+      <button class="nav-btn" data-panel="calendar" title="Calendar">
+        <span class="nav-icon">▦</span><span class="nav-label">Calendar</span>
+      </button>
+      <button class="nav-btn" data-panel="habits" title="Habits">
+        <span class="nav-icon">◆</span><span class="nav-label">Habits</span>
+      </button>
+      <button class="nav-btn" data-panel="expenses" title="Expenses">
+        <span class="nav-icon">◎</span><span class="nav-label">Expenses</span>
+      </button>
+      <button class="nav-btn" data-panel="study" title="Study Tracker">
+        <span class="nav-icon">▣</span><span class="nav-label">Study</span>
+      </button>
+    </nav>
+    <div class="sidebar-bottom">
+      <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
+        <span id="themeIcon">◑</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+        <h1 class="page-title" id="pageTitle">Dashboard</h1>
+      </div>
+      <div class="topbar-right">
+        <div class="weather-widget" id="weatherWidget">
+          <span class="weather-icon" id="weatherIcon">☀</span>
+          <span class="weather-temp" id="weatherTemp">--°C</span>
+          <span class="weather-city" id="weatherCity">Loading…</span>
+        </div>
+        <div class="quote-btn" id="quoteBtn" title="New Quote">✦ Quote</div>
+        <div class="current-time" id="currentTime">00:00</div>
+      </div>
+    </header>
+
+    <!-- MOTIVATIONAL QUOTE BANNER -->
+    <div class="quote-banner" id="quoteBanner">
+      <span class="quote-symbol">❝</span>
+      <p class="quote-text" id="quoteText">Loading inspiration…</p>
+      <span class="quote-symbol">❞</span>
+    </div>
+
+    <!-- PANELS -->
+    <div class="panels-container">
+
+      <!-- ===== DASHBOARD PANEL ===== -->
+      <section class="panel active" id="panel-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card accent-a">
+            <div class="stat-label">Tasks Done Today</div>
+            <div class="stat-value" id="stat-tasks">0</div>
+            <div class="stat-sub">of <span id="stat-tasks-total">0</span> total</div>
+          </div>
+          <div class="stat-card accent-b">
+            <div class="stat-label">Study Hours Today</div>
+            <div class="stat-value" id="stat-study">0h 0m</div>
+            <div class="stat-sub">Keep it up!</div>
+          </div>
+          <div class="stat-card accent-c">
+            <div class="stat-label">Pomodoros Done</div>
+            <div class="stat-value" id="stat-pomodoros">0</div>
+            <div class="stat-sub">sessions today</div>
+          </div>
+          <div class="stat-card accent-d">
+            <div class="stat-label">Habits Completed</div>
+            <div class="stat-value" id="stat-habits">0%</div>
+            <div class="stat-sub">daily streak</div>
+          </div>
+        </div>
+
+        <div class="productivity-section">
+          <div class="productivity-card">
+            <h3>Productivity Score</h3>
+            <div class="score-ring-wrapper">
+              <svg class="score-ring" viewBox="0 0 120 120">
+                <circle class="ring-bg" cx="60" cy="60" r="50"/>
+                <circle class="ring-fill" id="scoreRingFill" cx="60" cy="60" r="50"
+                  stroke-dasharray="314" stroke-dashoffset="314"/>
+              </svg>
+              <div class="score-center">
+                <span class="score-number" id="productivityScore">0</span>
+                <span class="score-label">/ 100</span>
+              </div>
+            </div>
+            <p class="score-desc" id="scoreDesc">Complete tasks, study & habits to boost your score!</p>
+          </div>
+
+          <div class="weekly-overview">
+            <h3>This Week's Activity</h3>
+            <div class="week-bars" id="weekBars">
+              <!-- Bars rendered by JS -->
+            </div>
+            <div class="week-labels">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-quick">
+          <div class="quick-card" id="quick-todo">
+            <h3>Recent Tasks</h3>
+            <ul class="quick-list" id="dashTodoList"></ul>
+          </div>
+          <div class="quick-card" id="quick-habits">
+            <h3>Today's Habits</h3>
+            <ul class="quick-list" id="dashHabitList"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TO-DO PANEL ===== -->
+      <section class="panel" id="panel-todo">
+        <div class="panel-header">
+          <h2>To-Do Manager</h2>
+          <div class="todo-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="pending">Pending</button>
+            <button class="filter-btn" data-filter="done">Done</button>
+          </div>
+        </div>
+        <div class="todo-input-row">
+          <input type="text" id="todoInput" placeholder="Add a new task…" class="text-input" />
+          <select id="todoPriority" class="select-input">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+          </select>
+          <select id="todoCategory" class="select-input">
+            <option value="study">Study</option>
+            <option value="assignment">Assignment</option>
+            <option value="personal">Personal</option>
+            <option value="other">Other</option>
+          </select>
+          <button class="btn-primary" id="addTodoBtn">+ Add</button>
+        </div>
+        <ul class="todo-list" id="todoList"></ul>
+        <div class="todo-footer">
+          <span id="todoCount">0 tasks</span>
+          <button class="btn-ghost" id="clearDoneTodos">Clear Done</button>
+        </div>
+      </section>
+
+      <!-- ===== NOTES PANEL ===== -->
+      <section class="panel" id="panel-notes">
+        <div class="panel-header">
+          <h2>Notes</h2>
+          <button class="btn-primary" id="newNoteBtn">+ New Note</button>
+        </div>
+        <div class="notes-layout">
+          <div class="notes-sidebar">
+            <input type="text" id="noteSearch" placeholder="Search notes…" class="text-input" />
+            <ul class="notes-list" id="notesList"></ul>
+          </div>
+          <div class="note-editor" id="noteEditor">
+            <input type="text" id="noteTitleInput" placeholder="Note title…" class="note-title-input" />
+            <textarea id="noteBodyInput" placeholder="Start writing your note…" class="note-body-input"></textarea>
+            <div class="note-editor-footer">
+              <span id="noteLastSaved">Not saved yet</span>
+              <button class="btn-primary" id="saveNoteBtn">Save Note</button>
+              <button class="btn-danger" id="deleteNoteBtn" style="display:none">Delete</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== POMODORO PANEL ===== -->
+      <section class="panel" id="panel-pomodoro">
+        <div class="panel-header">
+          <h2>Pomodoro Timer</h2>
+        </div>
+        <div class="pomodoro-layout">
+          <div class="pomodoro-timer-card">
+            <div class="pomo-mode-tabs">
+              <button class="pomo-tab active" data-mode="work">Focus</button>
+              <button class="pomo-tab" data-mode="short">Short Break</button>
+              <button class="pomo-tab" data-mode="long">Long Break</button>
+            </div>
+            <div class="pomo-circle-wrap">
+              <svg class="pomo-svg" viewBox="0 0 200 200">
+                <circle class="pomo-bg-ring" cx="100" cy="100" r="88"/>
+                <circle class="pomo-progress-ring" id="pomoProgressRing" cx="100" cy="100" r="88"
+                  stroke-dasharray="553" stroke-dashoffset="0"/>
+              </svg>
+              <div class="pomo-time-display" id="pomoDisplay">25:00</div>
+            </div>
+            <div class="pomo-controls">
+              <button class="pomo-btn" id="pomoStart">▶ Start</button>
+              <button class="pomo-btn ghost" id="pomoReset">↺ Reset</button>
+            </div>
+            <div class="pomo-label" id="pomoLabel">Time to Focus!</div>
+          </div>
+          <div class="pomodoro-stats-card">
+            <h3>Today's Sessions</h3>
+            <div class="pomo-dots" id="pomoDots"></div>
+            <div class="pomo-stat-row">
+              <div class="pomo-stat">
+                <span class="pomo-stat-num" id="pomoCompleted">0</span>
+                <span class="pomo-stat-label">Completed</span>
+              </div>
+              <div class="pomo-stat">
+                <span class="pomo-stat-num" id="pomoTotalTime">0m</span>
+                <span class="pomo-stat-label">Focus Time</span>
+              </div>
+            </div>
+            <div class="pomo-settings">
+              <h4>Settings</h4>
+              <label>Focus <input type="number" id="pomoWorkMin" value="25" min="1" max="60" class="num-input"/> min</label>
+              <label>Short Break <input type="number" id="pomoShortMin" value="5" min="1" max="30" class="num-input"/> min</label>
+              <label>Long Break <input type="number" id="pomoLongMin" value="15" min="1" max="60" class="num-input"/> min</label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== CALENDAR PANEL ===== -->
+      <section class="panel" id="panel-calendar">
+        <div class="panel-header">
+          <h2>Calendar Planner</h2>
+        </div>
+        <div class="calendar-layout">
+          <div class="calendar-card">
+            <div class="cal-nav">
+              <button class="btn-ghost" id="calPrev">‹</button>
+              <h3 id="calMonthYear">Month Year</h3>
+              <button class="btn-ghost" id="calNext">›</button>
+            </div>
+            <div class="cal-grid-header">
+              <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+            </div>
+            <div class="cal-grid" id="calGrid"></div>
+          </div>
+          <div class="calendar-events-card">
+            <h3>Events for <span id="calSelectedDate">—</span></h3>
+            <div class="event-input-row">
+              <input type="text" id="eventInput" placeholder="Add event…" class="text-input" />
+              <input type="time" id="eventTime" class="time-input" />
+              <button class="btn-primary" id="addEventBtn">+ Add</button>
+            </div>
+            <ul class="events-list" id="eventsList"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== HABITS PANEL ===== -->
+      <section class="panel" id="panel-habits">
+        <div class="panel-header">
+          <h2>Habit Tracker</h2>
+          <button class="btn-primary" id="addHabitBtn">+ Add Habit</button>
+        </div>
+        <div class="habit-add-form" id="habitAddForm" style="display:none">
+          <input type="text" id="habitNameInput" placeholder="Habit name…" class="text-input" />
+          <select id="habitColor" class="select-input">
+            <option value="#4ade80">Green</option>
+            <option value="#60a5fa">Blue</option>
+            <option value="#f472b6">Pink</option>
+            <option value="#fb923c">Orange</option>
+            <option value="#a78bfa">Purple</option>
+          </select>
+          <button class="btn-primary" id="saveHabitBtn">Save</button>
+          <button class="btn-ghost" id="cancelHabitBtn">Cancel</button>
+        </div>
+        <div class="habits-grid" id="habitsGrid">
+          <!-- Habits rendered by JS -->
+        </div>
+        <div class="habit-legend">
+          <span class="legend-dot done"></span> Done Today &nbsp;
+          <span class="legend-dot missed"></span> Missed &nbsp;
+          <span class="legend-dot streak"></span> On Streak
+        </div>
+      </section>
+
+      <!-- ===== EXPENSES PANEL ===== -->
+      <section class="panel" id="panel-expenses">
+        <div class="panel-header">
+          <h2>Expense Tracker</h2>
+        </div>
+        <div class="expenses-layout">
+          <div class="expense-input-card">
+            <h3>Add Expense</h3>
+            <input type="text" id="expenseDesc" placeholder="Description…" class="text-input" />
+            <input type="number" id="expenseAmount" placeholder="Amount (₹)" class="text-input" min="0" />
+            <select id="expenseCategory" class="select-input">
+              <option value="food">🍔 Food</option>
+              <option value="transport">🚌 Transport</option>
+              <option value="books">📚 Books</option>
+              <option value="entertainment">🎬 Entertainment</option>
+              <option value="other">📦 Other</option>
+            </select>
+            <button class="btn-primary" id="addExpenseBtn">+ Add Expense</button>
+            <div class="budget-row">
+              <label>Monthly Budget ₹</label>
+              <input type="number" id="budgetInput" placeholder="5000" class="text-input small" />
+              <button class="btn-ghost" id="setBudgetBtn">Set</button>
+            </div>
+          </div>
+          <div class="expense-summary-card">
+            <h3>Summary</h3>
+            <div class="expense-totals">
+              <div class="total-row">
+                <span>This Month</span>
+                <span class="total-amount" id="monthTotal">₹0</span>
+              </div>
+              <div class="budget-bar-wrap">
+                <div class="budget-bar" id="budgetBar" style="width:0%"></div>
+              </div>
+              <div class="budget-status" id="budgetStatus">No budget set</div>
+            </div>
+            <div class="expense-chart" id="expenseChart">
+              <!-- Category bars -->
+            </div>
+          </div>
+        </div>
+        <div class="expense-list-wrap">
+          <h3>Recent Expenses</h3>
+          <ul class="expense-list" id="expenseList"></ul>
+        </div>
+      </section>
+
+      <!-- ===== STUDY TRACKER PANEL ===== -->
+      <section class="panel" id="panel-study">
+        <div class="panel-header">
+          <h2>Study Tracker</h2>
+        </div>
+        <div class="study-layout">
+          <div class="study-timer-card">
+            <h3>Study Session</h3>
+            <input type="text" id="studySubject" placeholder="Subject / Topic…" class="text-input" />
+            <div class="study-stopwatch" id="studyStopwatch">00:00:00</div>
+            <div class="study-controls">
+              <button class="btn-primary" id="studyStart">▶ Start</button>
+              <button class="btn-ghost" id="studyPause" disabled>⏸ Pause</button>
+              <button class="btn-ghost" id="studyStop" disabled>■ Stop & Log</button>
+            </div>
+          </div>
+          <div class="study-log-card">
+            <h3>Study Log</h3>
+            <div class="study-today">
+              <span class="study-today-label">Today's Total</span>
+              <span class="study-today-time" id="studyTodayTotal">0h 0m</span>
+            </div>
+            <ul class="study-list" id="studyList"></ul>
+          </div>
+        </div>
+        <div class="study-subjects-chart">
+          <h3>Time by Subject (This Week)</h3>
+          <div id="subjectChart" class="subject-bars"></div>
+        </div>
+      </section>
+
+    </div><!-- /panels-container -->
+  </main>
+
+  <!-- NOTIFICATION TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
